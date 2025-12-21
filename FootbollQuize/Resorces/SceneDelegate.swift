@@ -1,9 +1,9 @@
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
+    
     var window: UIWindow?
-
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         self.window = UIWindow(windowScene: windowScene)
@@ -25,7 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window?.overrideUserInterfaceStyle = .light
         self.window?.makeKeyAndVisible()
     }
-
+    
     private func createTabBarController() -> UITabBarController {
         let tabBarVC = UITabBarController()
         
@@ -51,7 +51,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         settings.tabBarItem = UITabBarItem(
             title: "Statistics",
             image: UIImage(named: "tab_Statistics"),
-            selectedImage: UIImage(named: "tab_Statistics_active")?.withRenderingMode(.alwaysOriginal) 
+            selectedImage: UIImage(named: "tab_Statistics_active")?.withRenderingMode(.alwaysOriginal)
         )
         settings.tabBarItem.tag = 2
         
@@ -60,12 +60,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = .backgroundMain
-                
+        
+        appearance.shadowImage = UIImage()
+        appearance.shadowColor = .clear
+        
         tabBarVC.tabBar.standardAppearance = appearance
-        if #available(iOS 15.0, *) {
-            tabBarVC.tabBar.scrollEdgeAppearance = appearance
-        }
+        tabBarVC.tabBar.scrollEdgeAppearance = appearance
+        
         tabBarVC.tabBar.tintColor = .activeColor
+        tabBarVC.tabBar.shadowImage = UIImage()
+        tabBarVC.tabBar.backgroundImage = UIImage()
         
         return tabBarVC
     }
