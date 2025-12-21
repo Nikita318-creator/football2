@@ -1,13 +1,13 @@
 import UIKit
 
 extension UIColor {
-    static let primary = UIColor(hex: "#0A234F")
-    static let success = UIColor(hex: "#196B11")
-    static let error = UIColor(hex: "#CD3939")
-    static let textColor = UIColor(hex: "#010814")
-    static let secondTextColor = UIColor(hex: "#4B686D")
-    static let activeColor = UIColor(hex: "#B7DE16")
-    static let backgroundMain = UIColor(hex: "#E7EAF0")
+    static let primary = UIColor(hex: "#F98806")
+    static let success = UIColor(hex: "#1E6D0E")
+    static let error = UIColor(hex: "#DD2727")
+    static let textColor = UIColor(hex: "#201825")
+    static let secondTextColor = UIColor(hex: "#6B5F73")
+    static let activeColor = UIColor(hex: "#F98806")
+    static let backgroundMain = UIColor(hex: "#F1EDE9")
         
     convenience init(hex: String, alpha: CGFloat = 1.0) {
         var cString: String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
@@ -17,7 +17,6 @@ extension UIColor {
         }
 
         if ((cString.count) != 6) {
-            // Возвращаем серый цвет, если формат неверный
             self.init(red: 0.5, green: 0.5, blue: 0.5, alpha: alpha)
             return
         }

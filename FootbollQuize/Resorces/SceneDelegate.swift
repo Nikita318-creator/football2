@@ -5,9 +5,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        
         self.window = UIWindow(windowScene: windowScene)
         
         let splashVC = SplashVC()
@@ -19,7 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                               duration: 0.5,
                               options: .transitionCrossDissolve,
                               animations: {
-                self.window?.rootViewController = self.createMainTabBar()
+                self.window?.rootViewController = self.createTabBarController()
             }, completion: nil)
         }
         
@@ -27,34 +25,48 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window?.overrideUserInterfaceStyle = .light
         self.window?.makeKeyAndVisible()
     }
-    
-    private func createMainTabBar() -> UIViewController {
-        
-        let homeVC = HomeVC()
-        let personalTrainingVC = PersonalTrainingVC()
-        let progressVC = ProgressVC()
-        
-        let homeNavController = UINavigationController(rootViewController: homeVC)
-        let personalTrainingNavController = UINavigationController(rootViewController: personalTrainingVC)
-        let progressNavController = UINavigationController(rootViewController: progressVC)
 
-        homeVC.title = "Home"
-        homeNavController.tabBarItem = UITabBarItem(title: "", image: UIImage(named: "homeTab")?.withRenderingMode(.alwaysTemplate), tag: 0)
-
-        personalTrainingVC.title = "Training"
-        personalTrainingNavController.tabBarItem = UITabBarItem(title: "", image: UIImage(named: "historyTab")?.withRenderingMode(.alwaysTemplate), tag: 1)
+    private func createTabBarController() -> UITabBarController {
+        let tabBarVC = UITabBarController()
         
-        progressVC.title = "Progress"
-        progressNavController.tabBarItem = UITabBarItem(title: "", image: UIImage(named: "profileTab")?.withRenderingMode(.alwaysTemplate), tag: 2)
+        let home = UINavigationController(rootViewController: HomeVC())
+        home.tabBarItem = UITabBarItem(
+            title: "Home",
+            image: UIImage(named: "tab_Home"),
+            selectedImage: UIImage(named: "tab_Home_active")?.withRenderingMode(.alwaysOriginal)
+        )
+        home.tabBarItem.tag = 0
         
-        let tabBarController = CustomTabContainer()
+        let stats = UINavigationController(rootViewController: UIViewController())
+        stats.viewControllers.first?.view.backgroundColor = .white
+        stats.tabBarItem = UITabBarItem(
+            title: "Quiz",
+            image: UIImage(named: "tab_Quiz"),
+            selectedImage: UIImage(named: "tab_Quiz_active")?.withRenderingMode(.alwaysOriginal)
+        )
+        stats.tabBarItem.tag = 1
         
-        tabBarController.viewControllers = [
-            homeNavController,
-            personalTrainingNavController,
-            progressNavController
-        ]
+        let settings = UINavigationController(rootViewController: UIViewController())
+        settings.viewControllers.first?.view.backgroundColor = .white
+        settings.tabBarItem = UITabBarItem(
+            title: "Statistics",
+            image: UIImage(named: "tab_Statistics"),
+            selectedImage: UIImage(named: "tab_Statistics_active")?.withRenderingMode(.alwaysOriginal) 
+        )
+        settings.tabBarItem.tag = 2
+        
+        tabBarVC.viewControllers = [home, stats, settings]
+        
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .backgroundMain
                 
-        return tabBarController
+        tabBarVC.tabBar.standardAppearance = appearance
+        if #available(iOS 15.0, *) {
+            tabBarVC.tabBar.scrollEdgeAppearance = appearance
+        }
+        tabBarVC.tabBar.tintColor = .activeColor
+        
+        return tabBarVC
     }
 }
