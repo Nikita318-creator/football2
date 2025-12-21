@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		100515C32ECCDBEE008DD2FD /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 100515C22ECCDBEE008DD2FD /* SnapKit */; };
-		1082884F2EE7073C00BD94F5 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 1082884E2EE7073C00BD94F5 /* FirebaseCore */; };
-		108288512EE7073C00BD94F5 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 108288502EE7073C00BD94F5 /* FirebaseDatabase */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,8 +40,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				108288512EE7073C00BD94F5 /* FirebaseDatabase in Frameworks */,
-				1082884F2EE7073C00BD94F5 /* FirebaseCore in Frameworks */,
 				100515C32ECCDBEE008DD2FD /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -88,8 +84,6 @@
 			name = FootbollQuize;
 			packageProductDependencies = (
 				100515C22ECCDBEE008DD2FD /* SnapKit */,
-				1082884E2EE7073C00BD94F5 /* FirebaseCore */,
-				108288502EE7073C00BD94F5 /* FirebaseDatabase */,
 			);
 			productName = FootbollQuize;
 			productReference = 100515A22ECCDB6E008DD2FD /* FootbollQuize.app */;
@@ -121,7 +115,6 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				100515C12ECCDBEE008DD2FD /* XCRemoteSwiftPackageReference "SnapKit" */,
-				1082884D2EE7073C00BD94F5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 100515A32ECCDB6E008DD2FD /* Products */;
@@ -165,11 +158,11 @@
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FootbollQuize/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Foot Master";
+				INFOPLIST_KEY_CFBundleDisplayName = football2;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -177,7 +170,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.footmastrs.socc;
+				PRODUCT_BUNDLE_IDENTIFIER = com.football2.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -205,11 +198,11 @@
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FootbollQuize/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Foot Master";
+				INFOPLIST_KEY_CFBundleDisplayName = football2;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -217,7 +210,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.footmastrs.socc;
+				PRODUCT_BUNDLE_IDENTIFIER = com.football2.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -385,14 +378,6 @@
 				minimumVersion = 5.7.1;
 			};
 		};
-		1082884D2EE7073C00BD94F5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 12.6.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -400,16 +385,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 100515C12ECCDBEE008DD2FD /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
-		};
-		1082884E2EE7073C00BD94F5 /* FirebaseCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1082884D2EE7073C00BD94F5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseCore;
-		};
-		108288502EE7073C00BD94F5 /* FirebaseDatabase */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1082884D2EE7073C00BD94F5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseDatabase;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
