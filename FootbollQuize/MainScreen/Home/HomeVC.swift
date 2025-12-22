@@ -38,7 +38,7 @@ class HomeVC: UIViewController {
         view.addSubview(collectionView)
         
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+            make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.equalToSuperview().offset(20)
         }
         

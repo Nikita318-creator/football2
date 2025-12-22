@@ -37,7 +37,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         )
         home.tabBarItem.tag = 0
         
-        let stats = UINavigationController(rootViewController: UIViewController())
+        let stats = UINavigationController(rootViewController: QuizVC())
         stats.viewControllers.first?.view.backgroundColor = .white
         stats.tabBarItem = UITabBarItem(
             title: "Quiz",
@@ -46,7 +46,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         )
         stats.tabBarItem.tag = 1
         
-        let settings = UINavigationController(rootViewController: UIViewController())
+        let settings = UINavigationController(rootViewController: StatisticsVC())
         settings.viewControllers.first?.view.backgroundColor = .white
         settings.tabBarItem = UITabBarItem(
             title: "Statistics",
