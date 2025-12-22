@@ -3,6 +3,12 @@ import SnapKit
 
 class ExplanationView: UIView {
     
+    private let leftIndicatorView: UIView = {
+        let v = UIView()
+        v.backgroundColor = .activeColor
+        return v
+    }()
+    
     private let iconLabel: UILabel = {
         let l = UILabel()
         l.text = "!"
@@ -41,15 +47,24 @@ class ExplanationView: UIView {
     private func setupUI() {
         backgroundColor = .white
         layer.cornerRadius = 20
-        layer.borderWidth = 2
-        layer.borderColor = UIColor.activeColor.withAlphaComponent(0.3).cgColor
         
-        addSubview(iconLabel)
-        addSubview(titleLabel)
-        addSubview(descriptionLabel)
+        self.clipsToBounds = true
+        
+        layer.borderWidth = 1
+        layer.borderColor = UIColor.secondTextColor.withAlphaComponent(0.2).cgColor
+        
+        [leftIndicatorView, iconLabel, titleLabel, descriptionLabel].forEach {
+            addSubview($0)
+        }
+        
+        leftIndicatorView.snp.makeConstraints { make in
+            make.leading.top.bottom.equalToSuperview()
+            make.width.equalTo(6)
+        }
         
         iconLabel.snp.makeConstraints { make in
-            make.top.leading.equalToSuperview().offset(15)
+            make.top.equalToSuperview().offset(18)
+            make.leading.equalToSuperview().offset(20)
             make.size.equalTo(24)
         }
         
@@ -60,9 +75,10 @@ class ExplanationView: UIView {
         }
         
         descriptionLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(8)
-            make.leading.trailing.equalToSuperview().inset(15)
-            make.bottom.equalToSuperview().inset(15)
+            make.top.equalTo(titleLabel.snp.bottom).offset(12)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().inset(18)
+            make.bottom.equalToSuperview().inset(20)
         }
     }
     
