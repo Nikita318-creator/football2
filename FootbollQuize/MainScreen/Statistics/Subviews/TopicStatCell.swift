@@ -26,7 +26,7 @@ class TopicStatCell: UICollectionViewCell {
     private let percentLabel: UILabel = {
         let l = UILabel()
         l.font = .systemFont(ofSize: 20, weight: .bold)
-        l.textColor = .primary
+        l.textColor = .activeColor // Используем activeColor для акцента
         return l
     }()
     
@@ -61,9 +61,11 @@ class TopicStatCell: UICollectionViewCell {
         }
     }
     
-    func configure(with topic: Topic) {
+    func configure(with topic: Topic, isStrongSection: Bool) {
         titleLabel.text = topic.title
         subtitleLabel.text = topic.subtitle
         percentLabel.text = "\(topic.percentage)%"
+        
+        percentLabel.textColor = isStrongSection ? .activeColor : .secondTextColor
     }
 }

@@ -82,7 +82,7 @@ class MainStatisticsCell: UICollectionViewCell {
     
     private let progressFill: UIView = {
         let v = UIView()
-        v.backgroundColor = .primary
+        v.backgroundColor = .activeColor
         v.layer.cornerRadius = 4
         return v
     }()
@@ -168,14 +168,25 @@ class MainStatisticsCell: UICollectionViewCell {
     
     func configure(with model: GeneralStats) {
         rankLabel.text = model.rank
-        nextRankLabel.text = "To level \"\(model.nextRank)\""
-        questionsLabel.text = "\(model.questionsCount) questions"
+        
+        if model.rank == "Trainer" {
+            nextRankLabel.text = "Maximum rank achieved!"
+            questionsLabel.text = "All questions completed"
+        } else {
+            nextRankLabel.text = "To level \"\(model.nextRank)\""
+            questionsLabel.text = "\(model.questionsCount) questions left"
+        }
+        
         percentageLabel.text = "\(model.progress)%"
         
         let multiplier = CGFloat(model.progress) / 100.0
         progressFill.snp.remakeConstraints { make in
             make.top.leading.bottom.equalToSuperview()
             make.width.equalToSuperview().multipliedBy(multiplier)
+        }
+        
+        UIView.animate(withDuration: 0.5) {
+            self.containerView.layoutIfNeeded()
         }
     }
 }

@@ -3,17 +3,17 @@ import SnapKit
 
 class StatisticsVC: UIViewController {
     
-    private let generalData = GeneralStats(rank: "Analyst", nextRank: "Trainer", questionsCount: 15, progress: 85)
+    // MARK: - Data Properties
+    private var generalData: GeneralStats?
+    private var strongThemes: [Topic] = []
+    private var weakThemes: [Topic] = []
     
-    private let strongThemes = [
-        Topic(title: "Football Logic", subtitle: "High accuracy", percentage: 85),
-        Topic(title: "Defense Tactics", subtitle: "High accuracy", percentage: 78)
+    private let totalQuestionsLimit = 145
+    private let categoryTitles = [
+        "Football Logic", "Laws of the Game", "Tactical History", "Set Pieces", "Management"
     ]
     
-    private let weakThemes = [
-        Topic(title: "Offside Rules", subtitle: "Low accuracy", percentage: 42)
-    ]
-    
+    // MARK: - UI Elements
     private let titleLabel: UILabel = {
         let l = UILabel()
         l.text = "Statistics"
@@ -33,14 +33,74 @@ class StatisticsVC: UIViewController {
         return cv
     }()
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    // MARK: - Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
         setupUI()
     }
     
-    private func setupUI() {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         view.backgroundColor = .backgroundMain
+        calculateStatistics()
+        collectionView.reloadData()
+    }
+    
+    // MARK: - Logic
+    private func calculateStatistics() {
+        var totalSolved = 0
+        var categoryStats: [(title: String, percent: Int)] = []
         
+        let limits = [25, 30, 30, 30, 30]
+        
+        for i in 0..<5 {
+            let solved = UserDefaults.standard.integer(forKey: "QuizCategoryProgress_\(i)")
+            totalSolved += solved
+            
+            let percent = Int((Double(solved) / Double(limits[i])) * 100)
+            if solved > 0 {
+                categoryStats.append((title: categoryTitles[i], percent: percent))
+            }
+        }
+        
+        // 1. General Stats & Ranks
+        let ranks = ["Novice", "Analyst", "Pro", "Expert", "Trainer"]
+        let step = totalQuestionsLimit / ranks.count // ~29 вопросов на ранг
+        
+        let rankIndex = min(totalSolved / step, ranks.count - 1)
+        let currentRank = ranks[rankIndex]
+        let nextRank = rankIndex < ranks.count - 1 ? ranks[rankIndex + 1] : "Max Level"
+        
+        let remainingForNext = (rankIndex + 1) * step - totalSolved
+        let displayRemaining = remainingForNext > 0 ? remainingForNext : 0
+        
+        let totalProgress = Int((Double(totalSolved) / Double(totalQuestionsLimit)) * 100)
+        
+        self.generalData = GeneralStats(
+            rank: currentRank,
+            nextRank: nextRank,
+            questionsCount: displayRemaining,
+            progress: totalProgress
+        )
+        
+        // 2. Strong & Weak Themes
+        // Сортируем: сначала самые высокие проценты
+        let sortedStats = categoryStats.sorted { $0.percent > $1.percent }
+        
+        // Сильные (топ 2)
+        self.strongThemes = sortedStats.prefix(2).map {
+            Topic(title: $0.title, subtitle: "High accuracy", percentage: $0.percent)
+        }
+        
+        // Слабые (1 самый худший, но где есть хотя бы одна попытка и процент < 100)
+        if sortedStats.count > 1, let last = sortedStats.last, last.percent < 100 {
+            self.weakThemes = [Topic(title: last.title, subtitle: "Needs practice", percentage: last.percent)]
+        } else {
+            self.weakThemes = []
+        }
+    }
+    
+    private func setupUI() {
         view.addSubview(titleLabel)
         view.addSubview(collectionView)
         
@@ -72,7 +132,10 @@ class StatisticsVC: UIViewController {
                 
                 let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(40))
                 let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-                section.boundarySupplementaryItems = [header]
+                
+                // Скрываем хедер, если в секции нет данных
+                let hasData = (sectionIndex == 1 && !self.strongThemes.isEmpty) || (sectionIndex == 2 && !self.weakThemes.isEmpty)
+                section.boundarySupplementaryItems = hasData ? [header] : []
                 
                 return section
             }
@@ -86,19 +149,23 @@ extension StatisticsVC: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 0 { return 1 }
-        return section == 1 ? strongThemes.count : weakThemes.count
+        if section == 0 { return generalData != nil ? 1 : 0 }
+        if section == 1 { return strongThemes.count }
+        if section == 2 { return weakThemes.count }
+        return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.section == 0 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MainCell", for: indexPath) as! MainStatisticsCell
-            cell.configure(with: generalData)
+            if let data = generalData {
+                cell.configure(with: data)
+            }
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TopicCell", for: indexPath) as! TopicStatCell
             let theme = indexPath.section == 1 ? strongThemes[indexPath.row] : weakThemes[indexPath.row]
-            cell.configure(with: theme)
+            cell.configure(with: theme, isStrongSection: indexPath.section == 1)
             return cell
         }
     }
