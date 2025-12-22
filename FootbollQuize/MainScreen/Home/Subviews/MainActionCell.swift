@@ -16,15 +16,17 @@ class MainActionCell: UICollectionViewCell {
         iv.image = UIImage(named: "soccer_bg")
         iv.contentMode = .scaleAspectFill
         iv.backgroundColor = .secondTextColor
+        iv.clipsToBounds = true
         return iv
     }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Football\nLogic"
-        label.numberOfLines = 2
+        label.numberOfLines = 0
         label.font = .systemFont(ofSize: 38, weight: .bold)
         label.textColor = .textColor
+        label.setContentCompressionResistancePriority(.required, for: .vertical)
         return label
     }()
     
@@ -87,8 +89,8 @@ class MainActionCell: UICollectionViewCell {
         }
         
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(imageView.snp.bottom).offset(16)
-            make.leading.equalToSuperview().offset(24)
+            make.bottom.equalTo(imageView.snp.bottom).offset(26)
+            make.leading.trailing.equalToSuperview().inset(24)
         }
         
         statsContainer.snp.makeConstraints { make in
@@ -101,10 +103,13 @@ class MainActionCell: UICollectionViewCell {
             make.top.equalTo(statsContainer.snp.bottom).offset(12)
             make.leading.trailing.equalToSuperview().inset(20)
             make.height.equalTo(56)
-            make.bottom.lessThanOrEqualToSuperview().inset(20)
+            make.bottom.equalToSuperview().inset(20)
         }
         
-        // Stats inner layout
+        setupStatsLayout()
+    }
+    
+    private func setupStatsLayout() {
         let hStack1 = UIStackView(arrangedSubviews: [progressLabelLeft, progressValueRight])
         hStack1.distribution = .equalSpacing
         
