@@ -10,7 +10,7 @@ class RecommendationCell: UICollectionViewCell {
         return view
     }()
     
-    private let recLabel = createLabel(text: "Recommended today", color: .primary, size: 14)
+    private let recLabel = createLabel(text: "Recommended today", color: .activeColor, size: 14)
     private let titleLabel = createLabel(text: "Mistake correction", color: .textColor, size: 22, weight: .bold)
     private let subLabel = createLabel(text: "Analyze 5 difficult moments\nfrom past games", color: .secondTextColor, size: 16)
     
@@ -18,6 +18,7 @@ class RecommendationCell: UICollectionViewCell {
         let v = UIView()
         v.backgroundColor = .backgroundMain.withAlphaComponent(0.6)
         v.layer.cornerRadius = 15
+        v.isUserInteractionEnabled = false
         return v
     }()
     

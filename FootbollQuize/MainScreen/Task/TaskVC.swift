@@ -7,6 +7,14 @@ class TaskVC: UIViewController {
     private var currentIndex: Int = 0
     private var selectedAnswerIndex: Int?
     private var isShowingResult = false
+    private var viewModel = QuizQuestionViewModel()
+    
+    private let categoryIndex: Int
+    private let isMistakeCorrection: Bool
+    
+    private var progressKey: String {
+        return "QuizCategoryProgress_\(categoryIndex)"
+    }
     
     // MARK: - UI Elements
     private let backButton: UIButton = {
@@ -90,17 +98,58 @@ class TaskVC: UIViewController {
     }()
     
     // MARK: - Lifecycle
+    
+    init(categoryIndex: Int, isMistakeCorrection: Bool = false) {
+        self.categoryIndex = categoryIndex
+        self.isMistakeCorrection = isMistakeCorrection
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupMockData()
+        setupQuestions()
+        loadProgress()
         setupUI()
         loadQuestion()
+    }
+    
+    private func setupQuestions() {
+        if isMistakeCorrection {
+            self.questions = viewModel.getIncorrectQuestions()
+        } else {
+            self.questions = viewModel.getQuestions(for: categoryIndex)
+        }
+    }
+    
+    // MARK: - Progress Logic
+    
+    private func loadProgress() {
+        if isMistakeCorrection {
+            self.currentIndex = 0
+            return
+        }
+        
+        let savedIndex = UserDefaults.standard.integer(forKey: progressKey)
+        if savedIndex >= questions.count {
+            self.currentIndex = 0
+            saveProgress(index: 0)
+        } else {
+            self.currentIndex = savedIndex
+        }
+    }
+    
+    private func saveProgress(index: Int) {
+        guard !isMistakeCorrection else { return }
+        UserDefaults.standard.set(index, forKey: progressKey)
     }
     
     private func setupUI() {
         view.backgroundColor = .backgroundMain
         
-        // Порядок добавления важен: explanationView должен быть выше всех
         [backButton, progressLabel, topicLabel, questionLabel, resultIcon, resultStatusLabel, scrollView, actionButton, explanationView].forEach {
             view.addSubview($0)
         }
@@ -148,13 +197,11 @@ class TaskVC: UIViewController {
             make.height.equalTo(60)
         }
         
-        // ЭКСПЛАНЕЙШЕН: Привязан ТОЛЬКО к кнопке. Он будет перекрывать скролл, если тот до него дойдет.
         explanationView.snp.makeConstraints { make in
             make.bottom.equalTo(actionButton.snp.top).offset(-15)
             make.leading.trailing.equalToSuperview().inset(20)
         }
         
-        // СКРОЛЛ: Начинается под вопросом и заканчивается НАД кнопкой
         scrollView.snp.makeConstraints { make in
             make.top.equalTo(questionLabel.snp.bottom).offset(20)
             make.leading.trailing.equalToSuperview()
@@ -177,13 +224,16 @@ class TaskVC: UIViewController {
     }
     
     private func loadQuestion() {
-        guard currentIndex < questions.count else { return }
+        guard currentIndex < questions.count else {
+            dismiss(animated: true)
+            return
+        }
         let q = questions[currentIndex]
         
         isShowingResult = false
         selectedAnswerIndex = nil
         
-        questionLabel.font = .systemFont(ofSize: 32, weight: .semibold)
+        questionLabel.font = .systemFont(ofSize: 28, weight: .bold)
         questionLabel.textAlignment = .left
         topicLabel.isHidden = false
         
@@ -204,7 +254,7 @@ class TaskVC: UIViewController {
             }
         }
         
-        topicLabel.text = q.topic
+        topicLabel.text = isMistakeCorrection ? "Mistake Correction" : q.topic
         
         let fullText = "Question \(currentIndex + 1) / \(questions.count)"
         let attributedString = NSMutableAttributedString(string: fullText)
@@ -213,8 +263,6 @@ class TaskVC: UIViewController {
         }
         progressLabel.attributedText = attributedString
         
-        // ВОССТАНОВЛЕНО: Твой шрифт 28
-        questionLabel.font = .systemFont(ofSize: 28, weight: .bold)
         questionLabel.text = q.question
         actionButton.setTitle("Answer", for: .normal)
         
@@ -274,43 +322,21 @@ class TaskVC: UIViewController {
             resultStatusLabel.text = "Incorrect"
             actionButton.setTitle("Repeat", for: .normal)
             explanationView.isHidden = true
+            
+            if !isMistakeCorrection {
+                viewModel.saveIncorrectQuestion(q)
+            }
         }
         
-        // РАЗВЕРНУТЫЕ УСЛОВИЯ (Код-стайл)
         for (index, view) in optionViews.enumerated() {
             if isCorrect {
-                if index == q.correctIndex {
-                    view.setState(.correct)
-                } else {
-                    view.setState(.idle)
-                }
+                view.setState(index == q.correctIndex ? .correct : .idle)
             } else {
-                if index == selected {
-                    view.setState(.wrong)
-                } else {
-                    view.setState(.idle)
-                }
+                view.setState(index == selected ? .wrong : .idle)
             }
         }
         
         UIView.animate(withDuration: 0.3) { self.view.layoutIfNeeded() }
-    }
-    
-    private func setupMockData() {
-        for _ in 1...25 {
-            questions.append(QuizQuestion(
-                topic: "Football Logic",
-                question: "Team leads 1:0, 90+4 minute. What's more profitable?",
-                options: [
-                    "Waste time at the corner flag",
-                    "Try to score a second goal on the counterattack",
-                    "Play defensively near your own goal",
-                    "Make substitutions to waste time"
-                ],
-                correctIndex: 0,
-                explanation: "At the flag you control the ball and time, reducing the risk of a set piece at your own goal."
-            ))
-        }
     }
     
     @objc private func backButtonTapped() {
@@ -328,14 +354,19 @@ class TaskVC: UIViewController {
             let q = questions[currentIndex]
             if selectedAnswerIndex == q.correctIndex {
                 currentIndex += 1
+                saveProgress(index: currentIndex)
+                
                 if currentIndex < questions.count {
                     loadQuestion()
+                } else {
+                    dismiss(animated: true)
                 }
             } else {
                 loadQuestion()
             }
             return
         }
+        
         guard let selected = selectedAnswerIndex else { return }
         showResult(selected: selected)
     }

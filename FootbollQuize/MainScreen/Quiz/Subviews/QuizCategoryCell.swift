@@ -77,6 +77,7 @@ class QuizCategoryCell: UICollectionViewCell {
         btn.setTitleColor(.white, for: .normal)
         btn.titleLabel?.font = .systemFont(ofSize: 18, weight: .bold)
         btn.layer.cornerRadius = 20
+        btn.isUserInteractionEnabled = false
         return btn
     }()
     

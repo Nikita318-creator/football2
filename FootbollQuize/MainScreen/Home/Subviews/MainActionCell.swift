@@ -38,7 +38,7 @@ class MainActionCell: UICollectionViewCell {
     }()
     
     private let progressLabelLeft = createLabel(text: "Progress", color: .secondTextColor, size: 14)
-    private let progressValueRight = createLabel(text: "12 / 25", color: .textColor, size: 16, weight: .bold)
+    private let progressValueRight = MainActionCell.createLabel(text: "0 / 25", color: .textColor, size: 16, weight: .bold)
     
     private let progressBar: UIView = {
         let view = UIView()
@@ -55,8 +55,8 @@ class MainActionCell: UICollectionViewCell {
     }()
     
     private let questionLabelLeft = createLabel(text: "Current question", color: .secondTextColor, size: 14)
-    private let questionValueRight = createLabel(text: "№ 12", color: .textColor, size: 16, weight: .bold)
-    
+    private let questionValueRight = MainActionCell.createLabel(text: "№ 1", color: .textColor, size: 16, weight: .bold)
+
     private let continueButton: UIButton = {
         let btn = UIButton(type: .system)
         btn.setTitle("Continue", for: .normal)
@@ -64,6 +64,7 @@ class MainActionCell: UICollectionViewCell {
         btn.setTitleColor(.white, for: .normal)
         btn.titleLabel?.font = .systemFont(ofSize: 18, weight: .bold)
         btn.layer.cornerRadius = 20
+        btn.isUserInteractionEnabled = false
         return btn
     }()
     
@@ -148,5 +149,20 @@ class MainActionCell: UICollectionViewCell {
         l.textColor = color
         l.font = .systemFont(ofSize: size, weight: weight)
         return l
+    }
+    
+    func configure(solved: Int, total: Int) {
+        progressValueRight.text = "\(solved) / \(total)"
+        
+        let currentQuestion = solved < total ? solved + 1 : total
+        questionValueRight.text = "№ \(currentQuestion)"
+        
+        let ratio = total > 0 ? CGFloat(solved) / CGFloat(total) : 0
+        progressFill.snp.remakeConstraints { make in
+            make.top.leading.bottom.equalToSuperview()
+            make.width.equalToSuperview().multipliedBy(ratio)
+        }
+        
+        continueButton.setTitle(solved >= total ? "Restart" : "Continue", for: .normal)
     }
 }
