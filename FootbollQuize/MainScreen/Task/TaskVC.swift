@@ -8,7 +8,7 @@ class TaskVC: UIViewController {
     private var selectedAnswerIndex: Int?
     private var isShowingResult = false
     
-    // MARK: - UI Elements (Сохранение ваших оригинальных стилей)
+    // MARK: - UI Elements
     private let backButton: UIButton = {
         let btn = UIButton(type: .system)
         btn.setImage(UIImage(named: "backImg"), for: .normal)
@@ -31,6 +31,7 @@ class TaskVC: UIViewController {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .regular)
         label.textColor = .secondTextColor
+        label.textAlignment = .left
         return label
     }()
     
@@ -54,7 +55,7 @@ class TaskVC: UIViewController {
         label.font = .systemFont(ofSize: 28, weight: .bold)
         label.textColor = .textColor
         label.numberOfLines = 0
-        label.textAlignment = .center
+        label.textAlignment = .left
         return label
     }()
     
@@ -70,7 +71,9 @@ class TaskVC: UIViewController {
         let stack = UIStackView()
         stack.axis = .vertical
         stack.spacing = 12
-        stack.distribution = .fill
+        // КЛЮЧЕВОЕ ИЗМЕНЕНИЕ: строго одинаковая высота для всех вью в стеке
+        stack.distribution = .fillEqually
+        stack.alignment = .fill
         return stack
     }()
     
@@ -98,19 +101,14 @@ class TaskVC: UIViewController {
     private func setupUI() {
         view.backgroundColor = .backgroundMain
         
-        // 1. Root View Hierarchy
-        [backButton, progressLabel, topicLabel, resultIcon, resultStatusLabel, scrollView, actionButton].forEach {
+        [backButton, progressLabel, topicLabel, questionLabel, resultIcon, resultStatusLabel, scrollView, actionButton].forEach {
             view.addSubview($0)
         }
         
         scrollView.addSubview(contentView)
-        
-        // 2. ContentView Hierarchy
-        [questionLabel, optionsStackView, explanationView].forEach {
+        [optionsStackView, explanationView].forEach {
             contentView.addSubview($0)
         }
-        
-        // --- CONSTRAINTS FIX ---
         
         backButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
@@ -127,7 +125,12 @@ class TaskVC: UIViewController {
         
         topicLabel.snp.makeConstraints { make in
             make.top.equalTo(backButton.snp.bottom).offset(20)
-            make.centerX.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(20)
+        }
+        
+        questionLabel.snp.makeConstraints { make in
+            make.top.equalTo(topicLabel.snp.bottom).offset(20)
+            make.leading.trailing.equalToSuperview().inset(20)
         }
         
         resultIcon.snp.makeConstraints { make in
@@ -147,7 +150,6 @@ class TaskVC: UIViewController {
             make.height.equalTo(60)
         }
         
-        // ScrollView привязан к нижней кнопке и верхней зоне заголовка
         scrollView.snp.makeConstraints { make in
             make.top.equalTo(resultStatusLabel.snp.bottom).offset(10)
             make.leading.trailing.equalToSuperview()
@@ -159,21 +161,17 @@ class TaskVC: UIViewController {
             make.width.equalTo(scrollView)
         }
         
-        // Внутренняя цепочка контента (самое важное для contentSize)
-        questionLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(10)
-            make.leading.trailing.equalToSuperview().inset(30)
-        }
-        
         optionsStackView.snp.makeConstraints { make in
             make.top.equalTo(questionLabel.snp.bottom).offset(25)
             make.leading.trailing.equalToSuperview().inset(20)
+            // Убираем жесткую привязку к bottom здесь, если нет объяснения,
+            // чтобы контент не растягивался на весь экран некорректно
         }
         
         explanationView.snp.makeConstraints { make in
             make.top.equalTo(optionsStackView.snp.bottom).offset(20)
             make.leading.trailing.equalToSuperview().inset(20)
-            make.bottom.equalToSuperview().offset(-20) // Замыкаем цепочку на дно contentView
+            make.bottom.equalToSuperview().offset(-20)
         }
         
         actionButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
@@ -206,7 +204,6 @@ class TaskVC: UIViewController {
         questionLabel.text = q.question
         actionButton.setTitle("Answer", for: .normal)
         
-        // Скрываем explanation через alpha и isHidden, не ломая констрейнты
         explanationView.alpha = 0
         explanationView.isHidden = true
         
@@ -242,12 +239,9 @@ class TaskVC: UIViewController {
             resultIcon.image = UIImage(named: "success")
             resultStatusLabel.text = "Correct"
             actionButton.setTitle("Next Question", for: .normal)
-            
             explanationView.configure(text: q.explanation)
             explanationView.isHidden = false
-            UIView.animate(withDuration: 0.3) {
-                self.explanationView.alpha = 1
-            }
+            UIView.animate(withDuration: 0.3) { self.explanationView.alpha = 1 }
         } else {
             resultIcon.image = UIImage(named: "error")
             resultStatusLabel.text = "Incorrect"
@@ -295,9 +289,7 @@ class TaskVC: UIViewController {
             if selectedAnswerIndex == q.correctIndex {
                 currentIndex += 1
                 if currentIndex < questions.count { loadQuestion() }
-            } else {
-                loadQuestion()
-            }
+            } else { loadQuestion() }
             return
         }
         guard let selected = selectedAnswerIndex else { return }
