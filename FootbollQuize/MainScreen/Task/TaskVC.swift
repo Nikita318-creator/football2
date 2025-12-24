@@ -79,7 +79,7 @@ class TaskVC: UIViewController {
         let stack = UIStackView()
         stack.axis = .vertical
         stack.spacing = 12
-        stack.distribution = .fillEqually
+        stack.distribution = .fill
         stack.alignment = .fill
         return stack
     }()
@@ -277,8 +277,25 @@ class TaskVC: UIViewController {
             optionView.tag = index
             let tap = UITapGestureRecognizer(target: self, action: #selector(optionTapped(_:)))
             optionView.addGestureRecognizer(tap)
+            
             optionsStackView.addArrangedSubview(optionView)
+            
+            // ИЗМЕНЕНО: Устанавливаем минимальную высоту для каждой ячейки
+            optionView.snp.makeConstraints { make in
+                make.height.greaterThanOrEqualTo(80)
+            }
+            
             optionViews.append(optionView)
+        }
+        
+        // Для того чтобы ячейки были одинаковыми по высоте, если текста в одной больше:
+        // Мы связываем их высоты друг с другом
+        if optionViews.count > 1 {
+            for i in 1..<optionViews.count {
+                optionViews[i].snp.makeConstraints { make in
+                    make.height.equalTo(optionViews[0])
+                }
+            }
         }
         
         scrollView.setContentOffset(.zero, animated: false)

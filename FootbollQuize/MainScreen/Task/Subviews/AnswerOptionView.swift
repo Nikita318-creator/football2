@@ -43,7 +43,7 @@ class AnswerOptionView: UIView {
         addSubview(textLabel)
         
         letterLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(12)
+            make.leading.equalToSuperview().offset(20)
             make.centerY.equalToSuperview()
             make.size.equalTo(40)
         }

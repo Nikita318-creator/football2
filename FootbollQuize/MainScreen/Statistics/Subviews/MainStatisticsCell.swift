@@ -11,7 +11,7 @@ class MainStatisticsCell: UICollectionViewCell {
     
     private let iconContainer: UIView = {
         let v = UIView()
-        v.backgroundColor = UIColor.backgroundMain
+        v.backgroundColor = UIColor.clear
         v.layer.cornerRadius = 35
         return v
     }()
@@ -113,7 +113,7 @@ class MainStatisticsCell: UICollectionViewCell {
         
         brainIcon.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.size.equalTo(40)
+            make.size.equalToSuperview()
         }
         
         rankLabel.snp.makeConstraints { make in
