@@ -7,7 +7,7 @@ workflows:
       groups:
         - app_store_credentials
       vars:
-        BUNDLE_ID: "com.footmastrs.socc"
+        BUNDLE_ID: "com.quuz.ano"
         XCODE_PROJECT: "FootbollQuize.xcodeproj"
         XCODE_SCHEME: "FootbollQuize"
       
