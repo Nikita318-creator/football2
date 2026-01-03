@@ -13,12 +13,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         splashVC.actionOnDismiss = { [weak self] in
             guard let self = self else { return }
             
-            UIView.transition(with: self.window!,
-                              duration: 0.5,
-                              options: .transitionCrossDissolve,
-                              animations: {
-                self.window?.rootViewController = self.createTabBarController()
-            }, completion: nil)
+            self.window?.rootViewController = self.createTabBarController()
         }
         
         self.window?.rootViewController = splashVC

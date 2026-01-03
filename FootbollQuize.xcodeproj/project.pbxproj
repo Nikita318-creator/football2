@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		100515C32ECCDBEE008DD2FD /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 100515C22ECCDBEE008DD2FD /* SnapKit */; };
+		1055A2A02F08973A004FF05B /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 1055A29F2F08973A004FF05B /* FirebaseDatabase */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1055A2A02F08973A004FF05B /* FirebaseDatabase in Frameworks */,
 				100515C32ECCDBEE008DD2FD /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -84,6 +86,7 @@
 			name = FootbollQuize;
 			packageProductDependencies = (
 				100515C22ECCDBEE008DD2FD /* SnapKit */,
+				1055A29F2F08973A004FF05B /* FirebaseDatabase */,
 			);
 			productName = FootbollQuize;
 			productReference = 100515A22ECCDB6E008DD2FD /* FootbollQuize.app */;
@@ -115,6 +118,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				100515C12ECCDBEE008DD2FD /* XCRemoteSwiftPackageReference "SnapKit" */,
+				1055A29E2F08973A004FF05B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 100515A32ECCDB6E008DD2FD /* Products */;
@@ -169,7 +173,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quuz.ano;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -209,7 +213,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quuz.ano;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -378,6 +382,14 @@
 				minimumVersion = 5.7.1;
 			};
 		};
+		1055A29E2F08973A004FF05B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.7.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -385,6 +397,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 100515C12ECCDBEE008DD2FD /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		1055A29F2F08973A004FF05B /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1055A29E2F08973A004FF05B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
