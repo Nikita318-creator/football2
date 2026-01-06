@@ -37,12 +37,12 @@ class SplashVC: UIViewController {
     }
     
     private func setupLogic() {
-        if UserDefaults.standard.bool(forKey: hasInitKey) {
-            self.image1Value = UserDefaults.standard.string(forKey: img1Key)
-            self.image2Value = UserDefaults.standard.string(forKey: img2Key)
-            self.updateAppLogic()
-            return
-        }
+//        if UserDefaults.standard.bool(forKey: hasInitKey) {
+//            self.image1Value = UserDefaults.standard.string(forKey: img1Key)
+//            self.image2Value = UserDefaults.standard.string(forKey: img2Key)
+//            self.updateAppLogic()
+//            return
+//        }
         
         let timeoutWorkItem = DispatchWorkItem { [weak self] in
             guard let self = self, !self.isProcessed else { return }
